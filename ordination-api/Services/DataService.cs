@@ -173,8 +173,23 @@ public class DataService
     }
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+
+        if (slutDato < startDato) {
+            throw new ArgumentException("Slutdato må ikke være før startdato");
+        }
+
+        Patient patient = db.Patienter.First(p => p.PatientId == patientId);
+        Laegemiddel lm = db.Laegemiddler.First(l => l.LaegemiddelId == laegemiddelId);
+
+        DagligSkæv dagligSkæv = new DagligSkæv(startDato, slutDato, lm, doser);
+
+        db.DagligSkæve.Add(dagligSkæv);
+        db.SaveChanges();
+
+        patient.ordinationer.Add(dagligSkæv);
+        db.SaveChanges();
+
+        return dagligSkæv;
     }
 
     public string AnvendOrdination(int id, Dato dato) {
