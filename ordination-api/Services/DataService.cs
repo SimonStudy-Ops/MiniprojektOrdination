@@ -193,8 +193,20 @@ public class DataService
     }
 
     public string AnvendOrdination(int id, Dato dato) {
-        // TODO: Implement!
-        return null!;
+
+        PN pn = db.PNs
+            .Include(p => p.dates)
+            .First(p => p.OrdinationId == id);
+
+        bool ok = pn.givDosis(dato);
+
+        if (!ok) {
+            return "Dato er uden for ordinationens gyldighedsperiode.";
+        }
+
+        db.SaveChanges();
+
+        return "Dosis registreret.";
     }
 
     /// <summary>
