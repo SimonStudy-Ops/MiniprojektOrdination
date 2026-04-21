@@ -28,7 +28,8 @@ public class DagligFast : Ordination {
 		       + MiddagDosis.antal 
 		       + AftenDosis.antal 
 		       + NatDosis.antal;
-	}
+	}  
+	//ksdkks
 	
 	public Dosis[] getDoser() {
 		Dosis[] doser = {MorgenDosis, MiddagDosis, AftenDosis, NatDosis};
