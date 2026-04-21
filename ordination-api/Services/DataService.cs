@@ -154,11 +154,22 @@ public class DataService
         double antalMorgen, double antalMiddag, double antalAften, double antalNat, 
         DateTime startDato, DateTime slutDato) {
 
-        if (slutDato < startDato)
-        {
+        if (slutDato < startDato) {
             throw new ArgumentException("Slutdato må ikke være før startdato");
         }
-        
+
+        Patient patient = db.Patienter.First(p => p.PatientId == patientId);
+        Laegemiddel lm = db.Laegemiddler.First(l => l.LaegemiddelId == laegemiddelId);
+
+        DagligFast dagligFast = new DagligFast(startDato, slutDato, lm, antalMorgen, antalMiddag, antalAften, antalNat);
+
+        db.DagligFaste.Add(dagligFast);
+        db.SaveChanges();
+
+        patient.ordinationer.Add(dagligFast);
+        db.SaveChanges();
+
+        return dagligFast;
     }
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
